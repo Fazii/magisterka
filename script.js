@@ -1,3 +1,5 @@
+let currentVal;
+
 function get() {
     console.log("calling get");
     let responseText = document.getElementById('response');
@@ -12,10 +14,17 @@ function get() {
 
     req.onload = function () {
         let array = new Uint8Array(req.response);
-        responseText.innerHTML = parseInt(toHexString(array), 16);
-        console.log(responseText.innerHTML);
+        let responseVal = parseInt(toHexString(array), 16);
+        responseText.innerHTML = responseVal;
+        console.log(responseVal);
+        currentVal = responseVal;
     };
     req.send();
+}
+
+function getValueForChart() {
+    get();
+    return currentVal;
 }
 
 function patch() {

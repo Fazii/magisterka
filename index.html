@@ -2,11 +2,24 @@
 <html>
 <head>
     <script type="text/javascript" src='script.js'></script>
+	<script type="text/javascript" src='charts.js'></script>
+	<script src="code/highcharts.js"></script>
+	<script src="code/modules/exporting.js"></script>
+	<script src="code/modules/export-data.js"></script>
     <title>Test</title>
-    <meta charset="utf-8"/>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
+	<style type="text/css">
+		#container {
+			min-width: 310px;
+			height: 400px;
+			margin: 0 auto;
+		}
+	</style>
 </head>
 <body>
+
 <div id = "input-box">
     <h2>Zapis:</h2>
     <label for="AdressID">Adres: </label>
@@ -22,5 +35,11 @@
     <input type="button" value="Odczyt" onclick="get();" />
     <b><p id="response"></p></b>
 </div>
+
+<div id="container"></div>
+
+<script type="text/javascript">
+   draw();
+</script>
 </body>
 </html>
