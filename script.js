@@ -1,32 +1,37 @@
 function get() {
-    var responseText = document.getElementById('response');
-    var req = new XMLHttpRequest();
-    req.open("GET", "http://127.0.0.1:8000/address/123?words=1", true);
+    console.log("calling get");
+    let responseText = document.getElementById('response');
+    let req = new XMLHttpRequest();
+    let value = document.getElementById("valueID1").value;
+    if (value === "") {
+        value = 123;
+    }
+    console.log(value);
+    req.open("GET", "http://127.0.0.1:8000/address/" + value + "?words=1", true);
     req.responseType = "arraybuffer";
 
-    req.onload = function (res) {
-        var array = new Uint8Array(req.response);
-        var result = parseInt(toHexString(array), 16);
-        console.log(result);
-        responseText.innerHTML = result;
+    req.onload = function () {
+        let array = new Uint8Array(req.response);
+        responseText.innerHTML = parseInt(toHexString(array), 16);
+        console.log(responseText.innerHTML);
     };
     req.send();
 }
 
 function patch() {
-    var responseText = document.getElementById('response1');
-    var req = new XMLHttpRequest();
-    req.open("PATCH", "http://127.0.0.1:8000/address/123?words=1", true);
-    req.onload = function (res) {
-        var array = new Uint8Array(req.response);
-        var result = parseInt(toHexString(array), 16);
-        console.log(result);
-        responseText.innerHTML = result;
-    };
+    let req = new XMLHttpRequest();
+    let address = document.getElementById("AdressID").value;
+    if (address === "") {
+        address = 123;
+    }
+    req.open("PUT", "http://127.0.0.1:8000/address/" + address +"?words=1", true);
+    req.setRequestHeader("Content-Type", "application/octet-stream");
 
-    var array = toByteArray("5f43");
+    let value = document.getElementById("ValueID").value;
+    let array = toByteArray(value);
+    let array1 = new Uint8Array(array);
 
-    req.send(array);
+    req.send(array1);
 }
 
 function toHexString(byteArray) {
@@ -36,8 +41,8 @@ function toHexString(byteArray) {
 }
 
 function toByteArray(hexString) {
-    var result = [];
-    for (var i = 0; i < hexString.length; i += 2) {
+    let result = [];
+    for (let i = 0; i < hexString.length; i += 2) {
         result.push(parseInt(hexString.substr(i, 2), 16));
     }
     return result;
