@@ -1,7 +1,14 @@
+let charts = [];
 let chart;
 let interval;
 
 function draw(containerId) {
+    for (var i = 0; i < charts.length; i++) {
+        if (charts[i][0] === containerId.toString()) {
+            return;
+        }
+    }
+
     chart = Highcharts.chart("container"+containerId, {
         chart: {
             type: 'spline',
@@ -69,9 +76,19 @@ function draw(containerId) {
             }())
         }]
     });
+    let chartData = [containerId, chart, interval];
+    charts.push(chartData);
 }
 
-function deleteChart() {
-    chart.destroy();
-    clearInterval(interval);
+function deleteChart(containerId) {
+    charts.forEach(function (item, index) {
+        if (item[0] === containerId.toString()) {
+            clearInterval(item[2]);
+            item[1].destroy();
+
+            if (index > -1) {
+                charts.splice(index, 1);
+            }
+        }
+    });
 }

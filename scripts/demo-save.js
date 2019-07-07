@@ -65,7 +65,7 @@ function addGrid() {
 
     putLayout(JSON.stringify(currentLayoutJSON));
     putLayoutState(document.getElementsByClassName('grid')[0].innerHTML);
-    //initGrid();
+    initGrid();
    // draw()
 
    // draw(elementId);
@@ -73,6 +73,7 @@ function addGrid() {
 
 function deleteGrid(elementId) {
     console.log("Delete " + elementId);
+    deleteChart(elementId);
     document.getElementById(elementId).remove();
     let currentLayoutJSON = JSON.parse(currentLayout);
 
