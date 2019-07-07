@@ -2,14 +2,13 @@ let currentVal;
 let currentLayout;
 
 function get() {
-   // console.log("calling get");
     let responseText = document.getElementById('response');
     let req = new XMLHttpRequest();
     let value = document.getElementById("valueID1").value;
     if (value === "") {
         value = 123;
     }
-//    console.log(value);
+
     req.open("GET", "http://127.0.0.1:8000/address/" + value + "?words=1", true);
     req.responseType = "arraybuffer";
 
@@ -17,10 +16,37 @@ function get() {
         let array = new Uint8Array(req.response);
         let responseVal = parseInt(toHexString(array), 16);
         responseText.innerHTML = responseVal;
-     //   console.log(responseVal);
         currentVal = responseVal;
     };
     req.send();
+}
+
+
+function getValueOnAddress(address) {
+    return new Promise(function (resolve, reject) {
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET","http://127.0.0.1:8000/address/" + address + "?words=1", true);
+        xhr.responseType = "arraybuffer";
+        xhr.onload = function () {
+            if (this.status >= 200 && this.status < 300) {
+                let array = new Uint8Array(xhr.response);
+                let responseVal = parseInt(toHexString(array), 16);
+                resolve(responseVal);
+            } else {
+                reject({
+                    status: this.status,
+                    statusText: xhr.statusText
+                });
+            }
+        };
+        xhr.onerror = function () {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText
+            });
+        };
+        xhr.send();
+    });
 }
 
 function getLayout() {
@@ -63,11 +89,6 @@ function putLayoutState(data) {
     let req = new XMLHttpRequest();
     req.open("PUT", "http://127.0.0.1:8000/layout_state", false);
     req.send(data);
-}
-
-function getValueForChart() {
-    get();
-    return currentVal;
 }
 
 function patch() {

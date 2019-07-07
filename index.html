@@ -17,8 +17,7 @@
 		.container {
 			min-width: 310px;
 			height: 400px;
-			margin: 0 auto;
-			padding-bottom: 70px;
+			margin: 0 auto 30px;
 		}
 	</style>
 </head>
@@ -47,9 +46,13 @@
 
 <section class="save-demo">
 
-	<h2 class="section-title"><span>Save Demo</span></h2>
+	<h2 class="section-title"><span>Wykresy i odczyty</span></h2>
 
-	<input type="button" value="Dodaj" onclick="addGrid();" />
+	<label for="ChartAddressID">Adres: </label>
+	<input type="text" name="value" id="ChartAddressID">
+	<label for="ChartRefreshID">Częstotliwość odświeżania (w ms): </label>
+	<input type="text" name="value" id="ChartRefreshID">
+	<input type="button" value="Dodaj Wykres" onclick="addGrid();" />
 	<div class="grid">
 	</div>
 

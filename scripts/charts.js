@@ -2,7 +2,7 @@ let charts = [];
 let chart;
 let interval;
 
-function draw(containerId) {
+function draw(containerId, address, refreshRate) {
     for (var i = 0; i < charts.length; i++) {
         if (charts[i][0] === containerId.toString()) {
             return;
@@ -19,11 +19,11 @@ function draw(containerId) {
 
                     // set up the updating of the chart each second
                     var series = this.series[0];
-                    interval = setInterval(function () {
+                    interval = setInterval(async function () {
                         var x = (new Date()).getTime(), // current time
-                            y = getValueForChart();
+                            y = await getValueOnAddress(address);
                         series.addPoint([x, y], true, true);
-                    }, 1000);
+                    }, refreshRate);
                 }
             }
         },
@@ -33,7 +33,7 @@ function draw(containerId) {
         },
 
         title: {
-            text: 'Live data'
+            text: 'Live data ('+address+')'
         },
         xAxis: {
             type: 'datetime',
@@ -60,7 +60,7 @@ function draw(containerId) {
             enabled: true
         },
         series: [{
-            name: 'Data 1',
+            name: address,
             data: (function () {
                 var data = [],
                     time = (new Date()).getTime(),

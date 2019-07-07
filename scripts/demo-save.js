@@ -41,8 +41,9 @@ function loadLayout(grid) {
     grid.sort(newItems, {layout: 'instant'});
 
     layout.forEach(function (item, index) {
-        console.log(item.valueOf());
-        draw(item.valueOf());
+        let address = document.getElementById("ChartAddressID" + item.valueOf()).value;
+        let refreshRate = document.getElementById("ChartRefreshID" + item).value;
+        draw(item.valueOf(), address, refreshRate);
     });
 }
 
@@ -53,11 +54,20 @@ function addGrid() {
     div.id = elementId;
     div.setAttribute("data-id", elementId);
 
-    // div.innerHTML = '<div class="item-content" >' + elementId + '</div >';
-    div.innerHTML = '<div class="item-content" ><div class="container" id="container'+elementId+'"></div><input type="button" value="Usuń" onclick="deleteGrid('+ elementId +');" /></div>';
+    let chartAddress = document.getElementById("ChartAddressID").value;
+    let chartRefresh = document.getElementById("ChartRefreshID").value;
+    let updateData = ''+elementId+','+chartAddress+','+chartRefresh+'';
 
-    let elementsByClassNameElement = document.getElementsByClassName('grid')[0];
-    elementsByClassNameElement.appendChild(div);
+    let deleteButton = '<input type="button" value="Usuń" onclick="deleteGrid('+ elementId +');" />';
+    let saveButton = '<input type="button" value="Aktualizuj" onclick="updateGrid('+ updateData +');" />';
+    let cnt = '<div class="item-content" ><div class="container" id="container'+elementId+'"></div>'+deleteButton + saveButton+'</div>';
+    let address = '<label for="ChartAddressID'+elementId+'">Adres: </label><input type="text" value="'+chartAddress+'" id="ChartAddressID'+elementId+'">';
+    let refresh = '<label for="ChartRefreshID'+elementId+'">Odśw.: </label><input type="text" value="'+chartRefresh+'" id="ChartRefreshID'+elementId+'">';
+
+    div.innerHTML = ''+cnt + address + refresh +'';
+
+    let grid = document.getElementsByClassName('grid')[0];
+    grid.appendChild(div);
 
     let currentLayoutJSON = JSON.parse(currentLayout);
     currentLayoutJSON.push(elementId.toString());
@@ -66,9 +76,6 @@ function addGrid() {
     putLayout(JSON.stringify(currentLayoutJSON));
     putLayoutState(document.getElementsByClassName('grid')[0].innerHTML);
     initGrid();
-   // draw()
-
-   // draw(elementId);
 }
 
 function deleteGrid(elementId) {
@@ -88,6 +95,10 @@ function deleteGrid(elementId) {
     putLayout(JSON.stringify(currentLayoutJSON));
     putLayoutState(document.getElementsByClassName('grid')[0].innerHTML);
     initGrid();
+}
+
+function updateGrid(elementId, address, refresh) {
+    console.log(elementId, address, refresh);
 }
 function getElementId() {
     var n = document.getElementsByClassName('item'),
