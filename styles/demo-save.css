@@ -4,8 +4,8 @@
 .item {
     position: absolute;
     min-width: 500px;
-    height: 400px;
-    margin: 5px;
+    height: 500px;
+    margin: 12px;
     z-index: 1;
 }
 .item.muuri-item-hidden {

@@ -26,18 +26,19 @@ function get() {
 function getLayout() {
     console.log("calling layout get");
     let req = new XMLHttpRequest();
-    req.open("GET", "http://127.0.0.1:8000/layout", true);
+    req.open("GET", "http://127.0.0.1:8000/layout", false);
 
     req.onload = function () {
         currentLayout = req.responseText;
     };
     req.send();
+    return req.responseText;
 }
 
 function putLayout(data) {
     console.log("calling putLayout");
     let req = new XMLHttpRequest();
-    req.open("PUT", "http://127.0.0.1:8000/layout", true);
+    req.open("PUT", "http://127.0.0.1:8000/layout", false);
     req.setRequestHeader("Content-Type", "application/json");
 
     req.send(data);
@@ -52,7 +53,7 @@ function getLayoutState() {
         var currentLayoutState = req.responseText;
         console.log("current state:");
         console.log(currentLayoutState);
-        document.getElementsByClassName('grid')[0].insertAdjacentHTML('beforeend', currentLayoutState);
+       document.getElementsByClassName('grid')[0].insertAdjacentHTML('beforeend', req.responseText);
     };
     req.send();
 }
@@ -60,20 +61,13 @@ function getLayoutState() {
 function putLayoutState(data) {
     console.log("calling putLayoutState");
     let req = new XMLHttpRequest();
-    req.open("PUT", "http://127.0.0.1:8000/layout_state", true);
+    req.open("PUT", "http://127.0.0.1:8000/layout_state", false);
     req.send(data);
 }
 
 function getValueForChart() {
     get();
     return currentVal;
-}
-
-function getCurrentLayout() {
-    getLayout();
-    console.log("current layout:");
-    console.log(currentLayout);
-    return currentLayout;
 }
 
 function patch() {

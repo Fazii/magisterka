@@ -9,7 +9,6 @@ function initGrid() {
     });
 
     loadLayout(grid);
-    grid.add([]);
 }
 
 function serializeLayout(grid) {
@@ -22,8 +21,7 @@ function serializeLayout(grid) {
 }
 
 function loadLayout(grid) {
-    // getCurrentLayout()
-    var layout = JSON.parse("[\"1\", \"2\", \"3\"]");
+    var layout = JSON.parse(getLayout());
     var currentItems = grid.getItems();
     var currentItemIds = currentItems.map(function (item) {
         return item.getElement().getAttribute('data-id')
@@ -41,30 +39,55 @@ function loadLayout(grid) {
     }
 
     grid.sort(newItems, {layout: 'instant'});
+
+    layout.forEach(function (item, index) {
+        console.log(item.valueOf());
+        draw(item.valueOf());
+    });
 }
 
 function addGrid() {
     let elementId = getElementId() + 1;
-    var div = document.createElement('div');
+    let div = document.createElement('div');
     div.className = "item";
     div.id = elementId;
     div.setAttribute("data-id", elementId);
 
+    // div.innerHTML = '<div class="item-content" >' + elementId + '</div >';
+    div.innerHTML = '<div class="item-content" ><div class="container" id="container'+elementId+'"></div><input type="button" value="Usuń" onclick="deleteGrid('+ elementId +');" /></div>';
 
-    console.log("element:");
-    console.log(elementId);
+    let elementsByClassNameElement = document.getElementsByClassName('grid')[0];
+    elementsByClassNameElement.appendChild(div);
 
-    div.innerHTML = '<div class="item-content" >3</div >';
+    let currentLayoutJSON = JSON.parse(currentLayout);
+    currentLayoutJSON.push(elementId.toString());
+    console.log(currentLayoutJSON);
 
-    document.getElementsByClassName('grid')[0].appendChild(div);
-    var s = new XMLSerializer();
-    var str = s.serializeToString(div);
-    console.log(div);
-    putLayoutState(str);
-    initGrid();
+    putLayout(JSON.stringify(currentLayoutJSON));
+    putLayoutState(document.getElementsByClassName('grid')[0].innerHTML);
+    //initGrid();
    // draw()
+
+   // draw(elementId);
 }
 
+function deleteGrid(elementId) {
+    console.log("Delete " + elementId);
+    document.getElementById(elementId).remove();
+    let currentLayoutJSON = JSON.parse(currentLayout);
+
+    let index = currentLayoutJSON.indexOf(elementId.toString());
+
+    if (index > -1) {
+        currentLayoutJSON.splice(index, 1);
+    }
+
+    console.log(currentLayoutJSON);
+
+    putLayout(JSON.stringify(currentLayoutJSON));
+    putLayoutState(document.getElementsByClassName('grid')[0].innerHTML);
+    initGrid();
+}
 function getElementId() {
     var n = document.getElementsByClassName('item'),
         m = 0,

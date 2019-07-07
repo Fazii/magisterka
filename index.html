@@ -14,16 +14,17 @@
 	<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
 
 	<style type="text/css">
-		#container {
+		.container {
 			min-width: 310px;
 			height: 400px;
 			margin: 0 auto;
+			padding-bottom: 70px;
 		}
 	</style>
 </head>
 <body>
 <script>
-    getLayout();
+   // getLayout();
     getLayoutState();
 </script>
 
@@ -50,12 +51,6 @@
 
 	<input type="button" value="Dodaj" onclick="addGrid();" />
 	<div class="grid">
-		<div class="item" id="1" data-id="1">
-			<div class="item-content">1</div>
-		</div>
-		<div class="item" id="2" data-id="2">
-			<div class="item-content"><div id="container"></div></div>
-		</div>
 	</div>
 
 </section>
@@ -65,8 +60,5 @@
 <script src="scripts/vendor/hammer-2.0.8.min.js"></script>
 <script src="scripts/vendor/muuri.js"></script>
 <script src="scripts/demo-save.js?v=5"></script>
-<script type="text/javascript">
-   draw();
-</script>
 </body>
 </html>
