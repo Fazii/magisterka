@@ -1,6 +1,7 @@
 .grid {
     position: relative;
 }
+
 .item {
     position: absolute;
     min-width: 500px;
@@ -8,15 +9,19 @@
     margin: 12px;
     z-index: 1;
 }
+
 .item.muuri-item-hidden {
     z-index: 0;
 }
+
 .item.muuri-item-releasing {
     z-index: 2;
 }
+
 .item.muuri-item-dragging {
     z-index: 3;
 }
+
 .item-content {
     position: relative;
     width: 100%;
@@ -27,9 +32,11 @@
     color: white;
     cursor: pointer;
 }
+
 .item.muuri-item-dragging .item-content {
     background: blue;
 }
+
 .item.muuri-item-releasing .item-content {
     background: #87a8e2;
 }

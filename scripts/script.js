@@ -1,3 +1,4 @@
+const baseUrl = "http://127.0.0.1:8000/";
 let currentVal;
 let currentLayout;
 
@@ -9,7 +10,7 @@ function get() {
         value = 123;
     }
 
-    req.open("GET", "http://127.0.0.1:8000/address/" + value + "?words=1", true);
+    req.open("GET", baseUrl + "address/" + value + "?words=1", true);
     req.responseType = "arraybuffer";
 
     req.onload = function () {
@@ -21,11 +22,10 @@ function get() {
     req.send();
 }
 
-
 function getValueOnAddress(address) {
     return new Promise(function (resolve, reject) {
         let xhr = new XMLHttpRequest();
-        xhr.open("GET","http://127.0.0.1:8000/address/" + address + "?words=1", true);
+        xhr.open("GET", baseUrl + "address/" + address + "?words=1", true);
         xhr.responseType = "arraybuffer";
         xhr.onload = function () {
             if (this.status >= 200 && this.status < 300) {
@@ -52,7 +52,7 @@ function getValueOnAddress(address) {
 function getLayout() {
     console.log("calling layout get");
     let req = new XMLHttpRequest();
-    req.open("GET", "http://127.0.0.1:8000/layout", false);
+    req.open("GET", baseUrl + "layout", false);
 
     req.onload = function () {
         currentLayout = req.responseText;
@@ -64,7 +64,7 @@ function getLayout() {
 function putLayout(data) {
     console.log("calling putLayout");
     let req = new XMLHttpRequest();
-    req.open("PUT", "http://127.0.0.1:8000/layout", false);
+    req.open("PUT", baseUrl + "/layout", false);
     req.setRequestHeader("Content-Type", "application/json");
 
     req.send(data);
@@ -73,13 +73,13 @@ function putLayout(data) {
 function getLayoutState() {
     console.log("calling layout get");
     let req = new XMLHttpRequest();
-    req.open("GET", "http://127.0.0.1:8000/layout_state", true);
+    req.open("GET", baseUrl + "layout_state", true);
 
     req.onload = function () {
         var currentLayoutState = req.responseText;
         console.log("current state:");
         console.log(currentLayoutState);
-       document.getElementsByClassName('grid')[0].insertAdjacentHTML('beforeend', req.responseText);
+        document.getElementsByClassName('grid')[0].insertAdjacentHTML('beforeend', req.responseText);
     };
     req.send();
 }
@@ -87,7 +87,7 @@ function getLayoutState() {
 function putLayoutState(data) {
     console.log("calling putLayoutState");
     let req = new XMLHttpRequest();
-    req.open("PUT", "http://127.0.0.1:8000/layout_state", false);
+    req.open("PUT", baseUrl + "layout_state", false);
     req.send(data);
 }
 
@@ -97,7 +97,7 @@ function patch() {
     if (address === "") {
         address = 123;
     }
-    req.open("PUT", "http://127.0.0.1:8000/address/" + address +"?words=1", true);
+    req.open("PUT", baseUrl + "address/" + address + "?words=1", true);
     req.setRequestHeader("Content-Type", "application/octet-stream");
 
     let value = document.getElementById("ValueID").value;

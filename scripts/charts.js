@@ -1,15 +1,17 @@
-let charts = [];
+let charts = []; // Array containing all existing charts
 let chart;
 let interval;
 
 function draw(containerId, address, refreshRate) {
+
+    // Don't draw chart again if chart already exist
     for (var i = 0; i < charts.length; i++) {
         if (charts[i][0] === containerId.toString()) {
             return;
         }
     }
 
-    chart = Highcharts.chart("container"+containerId, {
+    chart = Highcharts.chart("container" + containerId, {
         chart: {
             type: 'spline',
             animation: Highcharts.svg, // don't animate in old IE
@@ -33,7 +35,7 @@ function draw(containerId, address, refreshRate) {
         },
 
         title: {
-            text: 'Live data ('+address+')'
+            text: 'Live data (' + address + ')'
         },
         xAxis: {
             type: 'datetime',
@@ -80,6 +82,11 @@ function draw(containerId, address, refreshRate) {
     charts.push(chartData);
 }
 
+/**
+ * Delete all chart data and remove it from {@charts } array
+ *
+ * @param containerId
+ */
 function deleteChart(containerId) {
     charts.forEach(function (item, index) {
         if (item[0] === containerId.toString()) {
