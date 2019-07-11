@@ -1,4 +1,8 @@
 initGrid();
+let gridElements = {
+    "layout": [],
+    "layout_order": []
+};
 
 function initGrid() {
     let grid = new Muuri('.grid', {
@@ -16,6 +20,8 @@ function serializeLayout(grid) {
         return item.getElement().getAttribute('data-id');
     });
     let stringify = JSON.stringify(itemIds);
+    // Update layout_order
+    gridElements.layout_order = stringify;
     console.log(stringify);
     putLayout(stringify);
 }
@@ -52,6 +58,15 @@ function loadLayout(grid) {
 
 /**
  * Add new grid with chart. Save structure and state in server
+ *  {
+   "element_id: "1", // numer elementu na gridzie, potrzebny do sortowania
+   "type": "spline_chart" // typ elementu.
+   "address": 0xAABBCCDD, //Potencjalnie tablica adresów
+   "refresh_rate": "1000 // czas pomiędzy kolejnymi odświeżeniami wykresu
+   "name": "koncentrator 1",
+   "length": num_of_bytes_to_read,
+
+}
  */
 function addGrid() {
     let elementId = getCurrentHighestGridElementId() + 1;
@@ -62,14 +77,24 @@ function addGrid() {
 
     let chartAddress = document.getElementById("ChartAddressID").value;
     let chartRefresh = document.getElementById("ChartRefreshID").value;
-    let updateData = '' + elementId + ',' + chartAddress + ',' + chartRefresh + '';
 
     let deleteButton = '<input type="button" value="Usuń" onclick="deleteGrid(' + elementId + ');" />';
-    let saveButton = '<input type="button" value="Aktualizuj" onclick="updateGrid(' + updateData + ');" />';
+    let saveButton = '<input type="button" value="Aktualizuj" onclick="updateGrid(' + elementId + ');" />';
     let cnt = '<div class="item-content" ><div class="container" id="container' + elementId + '"></div>' + deleteButton + saveButton + '</div>'; //Chart container
     let address = '<label for="ChartAddressID' + elementId + '">Adres: </label><input type="text" value="' + chartAddress + '" id="ChartAddressID' + elementId + '">';
     let refresh = '<label for="ChartRefreshID' + elementId + '">Odśw.: </label><input type="text" value="' + chartRefresh + '" id="ChartRefreshID' + elementId + '">';
 
+
+    let newGridElement = {
+        "element_id": elementId,
+        "type": "spline",
+        "address": chartAddress,
+        "refresh_rate": chartRefresh,
+        "name:": chartAddress,
+        "length": "1"
+    };
+
+    gridElements.layout.push(newGridElement);
     /**
      * Create new HTML element
      *
@@ -84,7 +109,9 @@ function addGrid() {
     currentLayoutJSON.push(elementId.toString());
     console.log(currentLayoutJSON);
 
-    putLayout(JSON.stringify(currentLayoutJSON)); // Save layout structure
+    let layout_order = JSON.stringify(currentLayoutJSON);
+    gridElements.layout_order = layout_order;
+    putLayout(layout_order); // Save layout structure
     putLayoutState(document.getElementsByClassName('grid')[0].innerHTML); // Save layout state
     initGrid();
 }
@@ -107,6 +134,12 @@ function deleteGrid(elementId) {
         currentLayoutJSON.splice(index, 1);
     }
 
+    for (let i = 0; i < gridElements.layout.length; i++) {
+        if (elementId.valueOf() === gridElements.layout[i].element_id) {
+            gridElements.layout.splice(i, 1);
+        }
+    }
+
     console.log(currentLayoutJSON);
 
     putLayout(JSON.stringify(currentLayoutJSON));
@@ -115,8 +148,16 @@ function deleteGrid(elementId) {
 }
 
 // TODO: Implement updating current grid element
-function updateGrid(elementId, address, refresh) {
-    console.log(elementId, address, refresh);
+function updateGrid(elementId) {
+    let chartAddress = document.getElementById("ChartAddressID" + elementId).value;
+    let chartRefresh = document.getElementById("ChartRefreshID" + elementId).value;
+    for (let i = 0; i < gridElements.layout.length; i++) {
+        if (elementId.valueOf() === gridElements.layout[i].element_id) {
+            gridElements.layout[i].address = chartAddress.toString();
+            gridElements.layout[i].refresh_rate = chartRefresh.toString();
+        }
+    }
+
 }
 
 function getCurrentHighestGridElementId() {
