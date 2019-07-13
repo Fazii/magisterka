@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src='scripts/script.js?v=5'></script>
     <script src='scripts/charts.js?=5'></script>
     <script src="code/highcharts.js"></script>
     <script src="code/modules/exporting.js"></script>
     <script src="code/modules/export-data.js"></script>
-    <link rel="stylesheet" href="styles/demo-save.css?v=5">
+    <link rel="stylesheet" href="styles/demo-save.css">
+    <link rel="stylesheet" href="styles/style.css">
     <title>Test</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,49 +15,65 @@
 
     <style type="text/css">
         .container {
-            min-width: 310px;
+            width: 510px;
             height: 400px;
-            margin: 0 auto 30px;
+            margin: 0 auto 60px;
         }
     </style>
 </head>
 <body>
 
+<button class="collapsible">Sekcja Zapis/Odczyt</button>
+<section class="read-write">
 <div id="input-box">
-    <h2>Zapis:</h2>
+    <h3>Zapis:</h3>
     <label for="AdressID">Adres: </label>
-    <input type="text" name="value" id="AdressID">
-    <label for="ValueID">Wartość: </label>
-    <input type="text" name="value" id="ValueID">
-    <input type="button" value="Zapisz" onclick="patch();"/>
+    <input type="text" class="inpt" name="value" id="AdressID">
+    <label for="ValueID">Wartość (hex): </label>
+    <input type="text" class="inpt" name="value" id="ValueID">
+    <input type="button" class="butn" value="Zapisz" onclick="patch();"/>
 </div>
 <div id="response-box">
-    <h2>Odczyt: </h2>
+    <h3>Odczyt: </h3>
     <label for="valueID1">Wartość: </label>
-    <input type="text" name="value" id="valueID1">
-    <input type="button" value="Odczyt" onclick="get();"/>
+    <input type="text" class="inpt" name="value" id="valueID1">
+    <input type="button" class="butn" value="Odczyt" onclick="get();"/>
     <b><p id="response"></p></b>
 </div>
+</section>
 
 <section class="save-demo">
 
-    <h2 class="section-title"><span>Wykresy i odczyty</span></h2>
+    <h3 class="section-title"><span>Wykresy i odczyty</span></h3>
 
     <label for="ChartAddressID">Adres: </label>
-    <input type="text" name="value" id="ChartAddressID">
+    <input type="text" class="inpt" name="value" id="ChartAddressID">
     <label for="ChartRefreshID">Częstotliwość odświeżania (w ms): </label>
-    <input type="text" name="value" id="ChartRefreshID">
-    <input type="button" value="Dodaj Wykres" onclick="addGrid();"/>
+    <input type="text" class="inpt" name="value" id="ChartRefreshID">
+    <input type="button" class="butn" value="Dodaj Wykres" onclick="addGrid();"/>
     <div class="grid">
     </div>
 
 </section>
 
 <script>
-    sendGetLayoutRequest();
-    //getLayoutState();
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        });
+    }
 </script>
 
+<script src='scripts/script.js?v=5'></script>
 <script src="scripts/vendor/web-animations-2.3.1.min.js"></script>
 <script src="scripts/vendor/hammer-2.0.8.min.js"></script>
 <script src="scripts/vendor/muuri.js"></script>

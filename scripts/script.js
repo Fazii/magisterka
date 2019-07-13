@@ -4,6 +4,7 @@ let gridElements = {
     "layout_order": []
 };
 
+sendGetLayoutRequest();
 function get() {
     let responseText = document.getElementById('response');
     let req = new XMLHttpRequest();
@@ -18,7 +19,7 @@ function get() {
     req.onload = function () {
         let array = new Uint8Array(req.response);
         let hexString = toHexString(array);
-        responseText.innerHTML = parseInt(hexString, 16).toString() + " / " + hexString.toUpperCase();
+        responseText.innerHTML = "DEC: "+parseInt(hexString, 16).toString() + " / HEX: " + hexString.toUpperCase();
     };
     req.send();
 }
@@ -99,30 +100,32 @@ function jsonToHtmlConverter(jsonArray) {
 
     if (typeof layout !== 'undefined' && layout.length > 0){
         layout.forEach(function (item, index) {
-            console.log(item);
-
-            let elementId = item.element_id.toString();
-            let div = document.createElement('div');
-            div.className = "item";
-            div.id = elementId;
-            div.setAttribute("data-id", elementId);
-            div.style.cssText = 'padding-bottom:60px;border-style:solid;border-width:1px';
-
-            let chartAddress = item.address.toString();
-            let chartRefresh = item.refresh_rate.toString();
-
-            let deleteButton = '<input type="button" value="Usuń" onclick="deleteGrid(' + elementId + ');" />';
-            let saveButton = '<input type="button" value="Aktualizuj" onclick="updateGrid(' + elementId + ');" />';
-            let cnt = '<div class="item-content" ><div class="container" id="container' + elementId + '"></div>' + deleteButton + saveButton + '</div>'; //Chart container
-            let address = '<label for="ChartAddressID' + elementId + '">Adres:</label><input type="text" value="' + chartAddress + '" id="ChartAddressID' + elementId + '">';
-            let refresh = '<label for="ChartRefreshID' + elementId + '">Odśw.:</label><input type="text" value="' + chartRefresh + '" id="ChartRefreshID' + elementId + '">';
-
-            div.innerHTML = '' + cnt + address + refresh + '';
+            let htmlDivElement = createHtmlElement(item.element_id.toString(), item.address.toString(), item.refresh_rate.toString());
 
             let grid = document.getElementsByClassName('grid')[0];
-            grid.appendChild(div);
+            grid.appendChild(htmlDivElement);
         });
     }
+}
+
+function createHtmlElement(elementId, address, refresh_rate) {
+    let div = document.createElement('div');
+    div.className = "item";
+    div.id = elementId;
+    div.setAttribute("data-id", elementId);
+    div.style.cssText = 'padding-bottom:80px;margin-top:30px;border-style:solid;border-width:1px;border-color:#0B29FA;';
+
+    let chartAddress = address;
+    let chartRefresh = refresh_rate;
+
+    let deleteButton = '<input type="button" class="butn" value="Usuń" onclick="deleteGrid(' + elementId + ');" />';
+    let saveButton = '<input type="button" class="butn" value="Aktualizuj" onclick="updateGrid(' + elementId + ');" />';
+    let cnt = '<div class="item-content" ><div class="container" id="container' + elementId + '"></div>' + deleteButton + saveButton + '</div>'; //Chart container
+    let address_input = '<label for="ChartAddressID' + elementId + '">Adres:</label><input type="text" class="inpt" value="' + chartAddress + '" id="ChartAddressID' + elementId + '">';
+    let refresh_input = '<label for="ChartRefreshID' + elementId + '">Odśw.:</label><input type="text" class="inpt" value="' + chartRefresh + '" id="ChartRefreshID' + elementId + '">';
+
+    div.innerHTML = '' + cnt + address_input + refresh_input + '';
+    return div;
 }
 
 function updateGridElementsArray(json) {

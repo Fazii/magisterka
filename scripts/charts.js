@@ -82,8 +82,6 @@ async function draw(containerId, address, refreshRate) {
         }]
     });
 
-
-   // console.log(chart);
     let chartData = [containerId, chart, interval];
     charts.push(chartData);
 }

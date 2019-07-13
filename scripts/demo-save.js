@@ -68,20 +68,10 @@ function loadLayout(grid) {
  */
 function addGrid() {
     let elementId = getCurrentHighestGridElementId() + 1;
-    let div = document.createElement('div');
-    div.className = "item";
-    div.id = elementId;
-    div.setAttribute("data-id", elementId);
-
     let chartAddress = document.getElementById("ChartAddressID").value;
     let chartRefresh = document.getElementById("ChartRefreshID").value;
 
-    let deleteButton = '<input type="button" value="Usuń" onclick="deleteGrid(' + elementId + ');" />';
-    let saveButton = '<input type="button" value="Aktualizuj" onclick="updateGrid(' + elementId + ');" />';
-    let cnt = '<div class="item-content" ><div class="container" id="container' + elementId + '"></div>' + deleteButton + saveButton + '</div>'; //Chart container
-    let address = '<label for="ChartAddressID' + elementId + '">Adres: </label><input type="text" value="' + chartAddress + '" id="ChartAddressID' + elementId + '">';
-    let refresh = '<label for="ChartRefreshID' + elementId + '">Odśw.: </label><input type="text" value="' + chartRefresh + '" id="ChartRefreshID' + elementId + '">';
-
+    let div = createHtmlElement(elementId.toString(), chartAddress.toString(), chartRefresh.toString())
 
     let newGridElement = {
         "element_id": elementId,
@@ -93,12 +83,6 @@ function addGrid() {
     };
 
     gridElements.layout.push(newGridElement);
-    /**
-     * Create new HTML element
-     *
-     * @type {string}
-     */
-    div.innerHTML = '' + cnt + address + refresh + '';
 
     let grid = document.getElementsByClassName('grid')[0];
     grid.appendChild(div); // Add element to grid
