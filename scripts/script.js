@@ -1,6 +1,8 @@
-const baseUrl = "http://127.0.0.1:8000/";
-let currentVal;
-let currentLayout;
+const BASE_URL = "http://127.0.0.1:8000/";
+let gridElements = {
+    "layout": [],
+    "layout_order": []
+};
 
 function get() {
     let responseText = document.getElementById('response');
@@ -10,14 +12,13 @@ function get() {
         value = 123;
     }
 
-    req.open("GET", baseUrl + "address/" + value + "?words=1", true);
+    req.open("GET", BASE_URL + "address/" + value + "?words=1", true);
     req.responseType = "arraybuffer";
 
     req.onload = function () {
         let array = new Uint8Array(req.response);
-        let responseVal = parseInt(toHexString(array), 16);
-        responseText.innerHTML = responseVal;
-        currentVal = responseVal;
+        let hexString = toHexString(array);
+        responseText.innerHTML = parseInt(hexString, 16).toString() + " / " + hexString.toUpperCase();
     };
     req.send();
 }
@@ -25,7 +26,7 @@ function get() {
 function getValueOnAddress(address) {
     return new Promise(function (resolve, reject) {
         let xhr = new XMLHttpRequest();
-        xhr.open("GET", baseUrl + "address/" + address + "?words=1", true);
+        xhr.open("GET", BASE_URL + "address/" + address + "?words=1", true);
         xhr.responseType = "arraybuffer";
         xhr.onload = function () {
             if (this.status >= 200 && this.status < 300) {
@@ -49,55 +50,13 @@ function getValueOnAddress(address) {
     });
 }
 
-function getLayout() {
-    console.log("calling layout get");
-    let req = new XMLHttpRequest();
-    req.open("GET", baseUrl + "layout", false);
-
-    req.onload = function () {
-        currentLayout = req.responseText;
-    };
-    req.send();
-    return req.responseText;
-}
-
-function putLayout(data) {
-    console.log("calling putLayout");
-    let req = new XMLHttpRequest();
-    req.open("PUT", baseUrl + "/layout", false);
-    req.setRequestHeader("Content-Type", "application/json");
-
-    req.send(data);
-}
-
-function getLayoutState() {
-    console.log("calling layout get");
-    let req = new XMLHttpRequest();
-    req.open("GET", baseUrl + "layout_state", true);
-
-    req.onload = function () {
-        var currentLayoutState = req.responseText;
-        console.log("current state:");
-        console.log(currentLayoutState);
-        document.getElementsByClassName('grid')[0].insertAdjacentHTML('beforeend', req.responseText);
-    };
-    req.send();
-}
-
-function putLayoutState(data) {
-    console.log("calling putLayoutState");
-    let req = new XMLHttpRequest();
-    req.open("PUT", baseUrl + "layout_state", false);
-    req.send(data);
-}
-
 function patch() {
     let req = new XMLHttpRequest();
     let address = document.getElementById("AdressID").value;
     if (address === "") {
         address = 123;
     }
-    req.open("PUT", baseUrl + "address/" + address + "?words=1", true);
+    req.open("PATCH", BASE_URL + "address/" + address + "?words=1", true);
     req.setRequestHeader("Content-Type", "application/octet-stream");
 
     let value = document.getElementById("ValueID").value;
@@ -106,6 +65,84 @@ function patch() {
 
     req.send(array1);
 }
+
+//Start - json communication
+
+function sendUpdateLayoutRequest(jsonLayout) {
+    console.log("calling sendUpdateLayoutRequest with payload: " + jsonLayout);
+    let req = new XMLHttpRequest();
+    req.open("PUT", BASE_URL + "layout-json", true);
+    req.setRequestHeader("Content-Type", "application/json");
+
+    req.send(jsonLayout);
+}
+
+function sendGetLayoutRequest() {
+    console.log("calling sendGetLayoutRequest");
+    let req = new XMLHttpRequest();
+    req.open("GET", BASE_URL + "layout-json", true);
+
+    req.onload = async function () {
+        let currentLayoutState = req.responseText;
+        console.log("current json state:");
+        console.log(currentLayoutState);
+        let updatedGridElements = await updateGridElementsArray(currentLayoutState);
+        jsonToHtmlConverter(updatedGridElements);
+    };
+    req.send();
+}
+
+//Stop - json communication
+
+function jsonToHtmlConverter(jsonArray) {
+    let layout = jsonArray.layout;
+
+    if (typeof layout !== 'undefined' && layout.length > 0){
+        layout.forEach(function (item, index) {
+            console.log(item);
+
+            let elementId = item.element_id.toString();
+            let div = document.createElement('div');
+            div.className = "item";
+            div.id = elementId;
+            div.setAttribute("data-id", elementId);
+            div.style.cssText = 'padding-bottom:60px;border-style:solid;border-width:1px';
+
+            let chartAddress = item.address.toString();
+            let chartRefresh = item.refresh_rate.toString();
+
+            let deleteButton = '<input type="button" value="Usuń" onclick="deleteGrid(' + elementId + ');" />';
+            let saveButton = '<input type="button" value="Aktualizuj" onclick="updateGrid(' + elementId + ');" />';
+            let cnt = '<div class="item-content" ><div class="container" id="container' + elementId + '"></div>' + deleteButton + saveButton + '</div>'; //Chart container
+            let address = '<label for="ChartAddressID' + elementId + '">Adres:</label><input type="text" value="' + chartAddress + '" id="ChartAddressID' + elementId + '">';
+            let refresh = '<label for="ChartRefreshID' + elementId + '">Odśw.:</label><input type="text" value="' + chartRefresh + '" id="ChartRefreshID' + elementId + '">';
+
+            div.innerHTML = '' + cnt + address + refresh + '';
+
+            let grid = document.getElementsByClassName('grid')[0];
+            grid.appendChild(div);
+        });
+    }
+}
+
+function updateGridElementsArray(json) {
+    return new Promise(function (resolve, reject) {
+        let parse = JSON.parse(json);
+        let layout_order_array = parse.layout_order;
+        let layout_array = parse.layout;
+        console.log("A:" + parse.layout_order);
+
+        if (typeof layout_array !== 'undefined' && layout_array.length > 0
+            && typeof layout_order_array !== 'undefined' && layout_order_array.length > 0) {
+            for (let i = 0; i < layout_array.length; i++) {
+                gridElements.layout[i] = layout_array[i];
+                gridElements.layout_order.push(layout_order_array[i]);
+            }
+        }
+        resolve(gridElements);
+    });
+}
+
 
 function toHexString(byteArray) {
     return Array.prototype.map.call(byteArray, function (byte) {

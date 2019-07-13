@@ -2,14 +2,17 @@ let charts = []; // Array containing all existing charts
 let chart;
 let interval;
 
-function draw(containerId, address, refreshRate) {
+async function draw(containerId, address, refreshRate) {
+    console.log("drawing: " + containerId + " " + address + " " + refreshRate);
 
-    // Don't draw chart again if chart already exist
-    for (var i = 0; i < charts.length; i++) {
+    //Don't draw chart again if chart already exist
+    for (let i = 0; i < charts.length; i++) {
         if (charts[i][0] === containerId.toString()) {
             return;
         }
     }
+
+    console.log("drawn: " + containerId + " " + address + " " + refreshRate);
 
     chart = Highcharts.chart("container" + containerId, {
         chart: {
@@ -17,12 +20,12 @@ function draw(containerId, address, refreshRate) {
             animation: Highcharts.svg, // don't animate in old IE
             marginRight: 10,
             events: {
-                load: function () {
+                load: async function () {
 
                     // set up the updating of the chart each second
-                    var series = this.series[0];
+                    let series = this.series[0];
                     interval = setInterval(async function () {
-                        var x = (new Date()).getTime(), // current time
+                        let x = (new Date()).getTime(), // current time
                             y = await getValueOnAddress(address);
                         series.addPoint([x, y], true, true);
                     }, refreshRate);
@@ -78,6 +81,9 @@ function draw(containerId, address, refreshRate) {
             }())
         }]
     });
+
+
+   // console.log(chart);
     let chartData = [containerId, chart, interval];
     charts.push(chartData);
 }
@@ -88,6 +94,7 @@ function draw(containerId, address, refreshRate) {
  * @param containerId
  */
 function deleteChart(containerId) {
+    console.log("delete chart: " + containerId);
     charts.forEach(function (item, index) {
         if (item[0] === containerId.toString()) {
             clearInterval(item[2]);

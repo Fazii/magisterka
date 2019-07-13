@@ -1,8 +1,4 @@
 initGrid();
-let gridElements = {
-    "layout": [],
-    "layout_order": []
-};
 
 function initGrid() {
     let grid = new Muuri('.grid', {
@@ -21,13 +17,13 @@ function serializeLayout(grid) {
     });
     let stringify = JSON.stringify(itemIds);
     // Update layout_order
-    gridElements.layout_order = stringify;
+    gridElements.layout_order = JSON.parse(stringify);
     console.log(stringify);
-    putLayout(stringify);
+    sendUpdateLayoutRequest(JSON.stringify(gridElements));
 }
 
 function loadLayout(grid) {
-    let layout = JSON.parse(getLayout());
+    let layout = gridElements.layout_order;
     let currentItems = grid.getItems();
     let currentItemIds = currentItems.map(function (item) {
         return item.getElement().getAttribute('data-id')
@@ -49,10 +45,12 @@ function loadLayout(grid) {
     /**
      * Get address and refresh rate and draw chart
      */
-    layout.forEach(function (item, index) {
-        let address = document.getElementById("ChartAddressID" + item.valueOf()).value;
+
+    layout.forEach(async function (item, index) {
+        let address = document.getElementById("ChartAddressID" + item).value;
         let refreshRate = document.getElementById("ChartRefreshID" + item).value;
-        draw(item.valueOf(), address, refreshRate);
+        console.log("try to draw: " + item + " " + address + " " + refreshRate);
+        await draw(item, address, refreshRate);
     });
 }
 
@@ -105,14 +103,15 @@ function addGrid() {
     let grid = document.getElementsByClassName('grid')[0];
     grid.appendChild(div); // Add element to grid
 
-    let currentLayoutJSON = JSON.parse(currentLayout);
+    let currentLayoutJSON = gridElements.layout_order;
     currentLayoutJSON.push(elementId.toString());
     console.log(currentLayoutJSON);
 
     let layout_order = JSON.stringify(currentLayoutJSON);
-    gridElements.layout_order = layout_order;
-    putLayout(layout_order); // Save layout structure
-    putLayoutState(document.getElementsByClassName('grid')[0].innerHTML); // Save layout state
+    gridElements.layout_order = JSON.parse(layout_order);
+
+
+    sendUpdateLayoutRequest(JSON.stringify(gridElements));
     initGrid();
 }
 
@@ -126,24 +125,15 @@ function deleteGrid(elementId) {
     console.log("Delete " + elementId);
     deleteChart(elementId);
     document.getElementById(elementId).remove();
-    let currentLayoutJSON = JSON.parse(currentLayout);
-
-    let index = currentLayoutJSON.indexOf(elementId.toString());
-
-    if (index > -1) {
-        currentLayoutJSON.splice(index, 1);
-    }
 
     for (let i = 0; i < gridElements.layout.length; i++) {
         if (elementId.valueOf() === gridElements.layout[i].element_id) {
             gridElements.layout.splice(i, 1);
+            gridElements.layout_order.splice(gridElements.layout_order.indexOf(elementId.toString()), 1);
         }
     }
 
-    console.log(currentLayoutJSON);
-
-    putLayout(JSON.stringify(currentLayoutJSON));
-    putLayoutState(document.getElementsByClassName('grid')[0].innerHTML);
+    sendUpdateLayoutRequest(JSON.stringify(gridElements));
     initGrid();
 }
 
@@ -158,6 +148,7 @@ function updateGrid(elementId) {
         }
     }
 
+    sendUpdateLayoutRequest(JSON.stringify(gridElements));
 }
 
 function getCurrentHighestGridElementId() {
