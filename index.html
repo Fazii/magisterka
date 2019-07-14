@@ -1,78 +1,76 @@
 <!DOCTYPE html>
-<html>
+<html lang="pl-PL">
 <head>
-    <script src='scripts/charts.js?=5'></script>
-    <script src="code/highcharts.js"></script>
-    <script src="code/modules/exporting.js"></script>
-    <script src="code/modules/export-data.js"></script>
-    <link rel="stylesheet" href="styles/demo-save.css">
-    <link rel="stylesheet" href="styles/style.css">
-    <title>Test</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+	<script src='scripts/charts.js?=5'></script>
+	<script src="code/highcharts.js"></script>
+	<script src="code/modules/exporting.js"></script>
+	<script src="code/modules/export-data.js"></script>
+	<script src='scripts/constants-script.js?v=5'></script>
+	<link rel="stylesheet" href="styles/demo-save.css">
+	<link rel="stylesheet" href="styles/style.css">
+	<title>J-PET Jagiellonian-PET TOMOGRAPHY</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
 
-    <style type="text/css">
-        .container {
-            width: 510px;
-            height: 400px;
-            margin: 0 auto 60px;
-        }
-    </style>
 </head>
 <body>
 
 <button class="collapsible">Sekcja Zapis/Odczyt</button>
 <section class="read-write">
-<div id="input-box">
-    <h3>Zapis:</h3>
-    <label for="AdressID">Adres: </label>
-    <input type="text" class="inpt" name="value" id="AdressID">
-    <label for="ValueID">Wartość (hex): </label>
-    <input type="text" class="inpt" name="value" id="ValueID">
-    <input type="button" class="butn" value="Zapisz" onclick="patch();"/>
-</div>
-<div id="response-box">
-    <h3>Odczyt: </h3>
-    <label for="valueID1">Wartość: </label>
-    <input type="text" class="inpt" name="value" id="valueID1">
-    <input type="button" class="butn" value="Odczyt" onclick="get();"/>
-    <b><p id="response"></p></b>
-</div>
+	<div id="input-box">
+		<h3>Zapis:</h3>
+		<label for="AdressID">Adres (hex): </label>
+		<input type="text" class="inpt" name="value" id="AdressID">
+		<label for="ValueID">Wartość (hex): </label>
+		<input type="text" class="inpt" name="value" id="ValueID">
+		<input type="button" class="butn" value="Zapisz" onclick="patch();"/>
+	</div>
+	<div id="response-box">
+		<h3>Odczyt: </h3>
+		<label for="valueID1">Adres: </label>
+		<input type="text" class="inpt" name="value" id="valueID1">
+		<input type="button" class="butn" value="Odczyt" onclick="get();"/>
+		<b><p id="response"></p></b>
+	</div>
 </section>
 
+<button class="collapsible">Sekcja Wykresy</button>
 <section class="save-demo">
 
-    <h3 class="section-title"><span>Wykresy i odczyty</span></h3>
+	<h3 class="section-title"><span>Wykresy</span></h3>
 
-    <label for="ChartAddressID">Adres: </label>
-    <input type="text" class="inpt" name="value" id="ChartAddressID">
-    <label for="ChartRefreshID">Częstotliwość odświeżania (w ms): </label>
-    <input type="text" class="inpt" name="value" id="ChartRefreshID">
-    <input type="button" class="butn" value="Dodaj Wykres" onclick="addGrid();"/>
-    <div class="grid">
-    </div>
+	<label for="ChartAddressID">Adres: </label>
+	<input type="text" class="inpt" name="value" id="ChartAddressID">
+	<label for="ChartRefreshID">Częstotliwość odświeżania (w ms): </label>
+	<input type="text" class="inpt" name="value" id="ChartRefreshID">
+	<input type="button" class="butn" value="Dodaj Wykres" onclick="addGrid();"/>
+	<div class="grid"></div>
 
 </section>
+<button class="collapsible">Sekcja Odczyty stałe</button>
+<section class="constants">
+	<h3 class="section-title"><span>Odczyty stałe</span></h3>
 
-<script>
-    var coll = document.getElementsByClassName("collapsible");
-    var i;
+	<div id="constant1" class="constant">
+		<p><b>0xA1000028</b> – system ID koncentratora 1</p>
+		<p id="constant1Value" class="constantValue"><b></b></p>
+		<script>
+            getConstantValue("0xA1000028", "constant1Value");
+		</script>
+	</div>
+	<div id="constant2" class="constant">
+		<p><b>0xA1100028</b> – system ID endpointa 1 podłączonego do koncentratora 1</p>
+		<p id="constant2Value" class="constantValue"></p>
+		<script>
+            getConstantValue("0xA1100028", "constant2Value");
+		</script>
+	</div>
+</section>
 
-    for (i = 0; i < coll.length; i++) {
-        coll[i].addEventListener("click", function() {
-            this.classList.toggle("active");
-            var content = this.nextElementSibling;
-            if (content.style.display === "block") {
-                content.style.display = "none";
-            } else {
-                content.style.display = "block";
-            }
-        });
-    }
-</script>
 
+<script src='scripts/collapse-scripts.js?v=5'></script>
 <script src='scripts/script.js?v=5'></script>
 <script src="scripts/vendor/web-animations-2.3.1.min.js"></script>
 <script src="scripts/vendor/hammer-2.0.8.min.js"></script>

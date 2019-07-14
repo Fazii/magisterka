@@ -118,7 +118,7 @@ function createHtmlElement(elementId, address, refresh_rate) {
     let chartAddress = address;
     let chartRefresh = refresh_rate;
 
-    let deleteButton = '<input type="button" class="butn" value="Usuń" onclick="deleteGrid(' + elementId + ');" />';
+    let deleteButton = '<input type="button" class="butn-dlt" value="Usuń" onclick="deleteGrid(' + elementId + ');" />';
     let saveButton = '<input type="button" class="butn" value="Aktualizuj" onclick="updateGrid(' + elementId + ');" />';
     let cnt = '<div class="item-content" ><div class="container" id="container' + elementId + '"></div>' + deleteButton + saveButton + '</div>'; //Chart container
     let address_input = '<label for="ChartAddressID' + elementId + '">Adres:</label><input type="text" class="inpt" value="' + chartAddress + '" id="ChartAddressID' + elementId + '">';

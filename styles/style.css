@@ -1,7 +1,6 @@
 body {
     font-family: Arial, serif;
     font-size: 16px;
-    word-spacing: 2px;
     color: #000000;
     font-weight: normal;
     text-decoration: none;
@@ -10,11 +9,18 @@ body {
     text-transform: none;
 }
 
+.container {
+    width: 510px;
+    height: 400px;
+    margin: 0 auto 60px;
+}
+
 .collapsible {
     background-color: #eee;
     color: #444;
     cursor: pointer;
-    padding: 10px;
+    padding: 5px;
+    margin: 5px;
     width: 100%;
     border: none;
     text-align: left;
@@ -23,17 +29,40 @@ body {
     font-style: oblique;
 }
 
-/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
 .active, .collapsible:hover {
     background-color: #ccc;
 }
 
-/* Style the collapsible content. Note: hidden by default */
+.grid {
+    min-height: 570px;
+    padding-bottom: 30px;
+}
 .read-write {
     padding: 0 18px;
     display: none;
     overflow: hidden;
     background-color: #f1f1f1;
+}
+
+.constant {
+    width: auto;
+    height: auto;
+    margin: 10px;
+    padding-left: 5%;
+    padding-right: 5%;
+    font-size: 16px;
+    border-width: 1px;
+    border-color: #00b4fa;
+    background-color: #ffffff;
+    color: #000000;
+    border-style: solid;
+    border-radius: 5px;
+}
+
+.constantValue {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
 }
 
 .butn {
@@ -60,6 +89,32 @@ body {
     background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
     background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
     background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+    text-decoration: none;
+}
+
+.butn-dlt {
+    background: #db0014;
+    background-image: -webkit-linear-gradient(top, #db1e00, #9e0125);
+    background-image: -moz-linear-gradient(top, #db1e00, #9e0125);
+    background-image: -ms-linear-gradient(top, #db1e00, #9e0125);
+    background-image: -o-linear-gradient(top, #db1e00, #9e0125);
+    background-image: linear-gradient(to bottom, #db1e00, #9e0125);
+    -webkit-border-radius: 10;
+    -moz-border-radius: 10;
+    border-radius: 10px;
+    color: #ffffff;
+    font-size: 12px;
+    padding: 10px 20px 10px 20px;
+    text-decoration: none;
+}
+
+.butn-dlt:hover {
+    background: #fd3c00; !important;
+    background-image: -webkit-linear-gradient(top, #fd3c00, #8f001e); !important;
+    background-image: -moz-linear-gradient(top, #fd3c00, #8f001e); !important;
+    background-image: -ms-linear-gradient(top, #fd3c00, #8f001e); !important;
+    background-image: -o-linear-gradient(top, #fd3c00, #8f001e); !important;
+    background-image: linear-gradient(to bottom, #fd3c00, #8f001e); !important;
     text-decoration: none;
 }
 
