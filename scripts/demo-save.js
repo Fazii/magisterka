@@ -1,14 +1,28 @@
-initGrid();
-
 function initGrid() {
+    console.log("initGrid");
     let grid = new Muuri('.grid', {
         dragEnabled: true,
-        layoutOnInit: false
+        layoutOnInit: true,
+        dragStartPredicate: function (item, event) {
+            return document.getElementById("layoutBlock").value !== "Odblokuj";
+
+        },
     }).on('move', function () {
         serializeLayout(grid);
     });
 
     loadLayout(grid);
+}
+
+function blockGrid() {
+    let layoutBlock = document.getElementById("layoutBlock");
+    if (layoutBlock.value === "Zablokuj") {
+        initGrid();
+        layoutBlock.value = "Odblokuj";
+    } else {
+        initGrid();
+        layoutBlock.value = "Zablokuj";
+    }
 }
 
 function serializeLayout(grid) {
@@ -49,7 +63,6 @@ function loadLayout(grid) {
     layout.forEach(async function (item, index) {
         let address = document.getElementById("ChartAddressID" + item).value;
         let refreshRate = document.getElementById("ChartRefreshID" + item).value;
-        console.log("try to draw: " + item + " " + address + " " + refreshRate);
         await draw(item, address, refreshRate);
     });
 }
@@ -133,6 +146,8 @@ function updateGrid(elementId) {
     }
 
     sendUpdateLayoutRequest(JSON.stringify(gridElements));
+
+    updateChart(elementId, chartRefresh, chartAddress);
 }
 
 function getCurrentHighestGridElementId() {
@@ -146,3 +161,5 @@ function getCurrentHighestGridElementId() {
 
     return m;
 }
+
+initGrid();

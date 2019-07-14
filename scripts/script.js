@@ -72,7 +72,7 @@ function patch() {
 function sendUpdateLayoutRequest(jsonLayout) {
     console.log("calling sendUpdateLayoutRequest with payload: " + jsonLayout);
     let req = new XMLHttpRequest();
-    req.open("PUT", BASE_URL + "layout-json", true);
+    req.open("PUT", BASE_URL + "configuration", true);
     req.setRequestHeader("Content-Type", "application/json");
 
     req.send(jsonLayout);
@@ -81,7 +81,7 @@ function sendUpdateLayoutRequest(jsonLayout) {
 function sendGetLayoutRequest() {
     console.log("calling sendGetLayoutRequest");
     let req = new XMLHttpRequest();
-    req.open("GET", BASE_URL + "layout-json", true);
+    req.open("GET", BASE_URL + "configuration", true);
 
     req.onload = async function () {
         let currentLayoutState = req.responseText;
@@ -113,23 +113,25 @@ function createHtmlElement(elementId, address, refresh_rate) {
     div.className = "item";
     div.id = elementId;
     div.setAttribute("data-id", elementId);
-    div.style.cssText = 'padding-bottom:80px;margin-top:30px;border-style:solid;border-width:1px;border-color:#0B29FA;';
+    div.style.cssText = 'background-color:#eee;padding-bottom:80px;margin-top:30px;border-style:solid;border-width:1px;border-color:#0B29FA;border-radius:3px;';
 
     let chartAddress = address;
     let chartRefresh = refresh_rate;
 
-    let deleteButton = '<input type="button" class="butn-dlt" value="Usuń" onclick="deleteGrid(' + elementId + ');" />';
-    let saveButton = '<input type="button" class="butn" value="Aktualizuj" onclick="updateGrid(' + elementId + ');" />';
-    let cnt = '<div class="item-content" ><div class="container" id="container' + elementId + '"></div>' + deleteButton + saveButton + '</div>'; //Chart container
+    let deleteButton = '<input type="button" class="butn-dlt chartButton" value="Usuń" onclick="deleteGrid(' + elementId + ');" />';
+    let saveButton = '<input type="button" class="butn chartButton" value="Aktualizuj" onclick="updateGrid(' + elementId + ');" />';
+    let chartButtons = '<div class="chartButtons">' + deleteButton + saveButton + '</div>';
     let address_input = '<label for="ChartAddressID' + elementId + '">Adres:</label><input type="text" class="inpt" value="' + chartAddress + '" id="ChartAddressID' + elementId + '">';
     let refresh_input = '<label for="ChartRefreshID' + elementId + '">Odśw.:</label><input type="text" class="inpt" value="' + chartRefresh + '" id="ChartRefreshID' + elementId + '">';
+    let cnt = '<div class="item-content" ><div class="container" id="container' + elementId + '"></div>'+ address_input + refresh_input + chartButtons + '</div>'; //Chart container
 
-    div.innerHTML = '' + cnt + address_input + refresh_input + '';
+    div.innerHTML = '' + cnt +'';
     return div;
 }
 
 function updateGridElementsArray(json) {
     return new Promise(function (resolve, reject) {
+        console.log(json);
         let parse = JSON.parse(json);
         let layout_order_array = parse.layout_order;
         let layout_array = parse.layout;

@@ -3,8 +3,6 @@ let chart;
 let interval;
 
 async function draw(containerId, address, refreshRate) {
-    console.log("drawing: " + containerId + " " + address + " " + refreshRate);
-
     //Don't draw chart again if chart already exist
     for (let i = 0; i < charts.length; i++) {
         if (charts[i][0] === containerId.toString()) {
@@ -12,11 +10,11 @@ async function draw(containerId, address, refreshRate) {
         }
     }
 
-    console.log("drawn: " + containerId + " " + address + " " + refreshRate);
-
     chart = Highcharts.chart("container" + containerId, {
+
         chart: {
             type: 'spline',
+            zoomType: 'xy',
             animation: Highcharts.svg, // don't animate in old IE
             marginRight: 10,
             events: {
@@ -38,15 +36,18 @@ async function draw(containerId, address, refreshRate) {
         },
 
         title: {
-            text: 'Live data (' + address + ')'
+            text: 'Odczyt: (' + address + ')'
         },
         xAxis: {
+            title: {
+                text: 'Czas'
+            },
             type: 'datetime',
             tickPixelInterval: 150
         },
         yAxis: {
             title: {
-                text: 'Value'
+                text: 'Wartość'
             },
             plotLines: [{
                 value: 0,
@@ -92,6 +93,10 @@ async function draw(containerId, address, refreshRate) {
  * @param containerId
  */
 function deleteChart(containerId) {
+    if(document.getElementById("layoutBlock").value === "Zablokuj") {
+        alert("Zablokuj siatkę elementów przed ich usuwaniem");
+        return;
+    }
     console.log("delete chart: " + containerId);
     charts.forEach(function (item, index) {
         if (item[0] === containerId.toString()) {
@@ -101,6 +106,30 @@ function deleteChart(containerId) {
             if (index > -1) {
                 charts.splice(index, 1);
             }
+        }
+    });
+}
+
+function updateChart(containerId, refreshRate, address) {
+    charts.forEach(function (item, index) {
+        if (item[0] === containerId.toString()) {
+            let interval = item[2];
+            clearInterval(interval);
+            let series = item[1].series[0];
+            item[2] = setInterval(async function () {
+                let x = (new Date()).getTime(),
+                    y = await getValueOnAddress(address);
+                series.addPoint([x, y], true, true);
+            }, refreshRate);
+
+            item[1].update({
+                title: {
+                    text: 'Live data (' + address + ')'
+                },
+                series: [{
+                    name: address
+                }]
+            });
         }
     });
 }

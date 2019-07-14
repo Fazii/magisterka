@@ -10,9 +10,9 @@ body {
 }
 
 .container {
-    width: 510px;
-    height: 400px;
-    margin: 0 auto 60px;
+    min-width: 510px;
+    height: 480px;
+    margin: 0 auto;
 }
 
 .collapsible {
@@ -37,11 +37,13 @@ body {
     min-height: 570px;
     padding-bottom: 30px;
 }
+
 .read-write {
     padding: 0 18px;
     display: none;
     overflow: hidden;
     background-color: #f1f1f1;
+
 }
 
 .constant {
@@ -57,6 +59,7 @@ body {
     color: #000000;
     border-style: solid;
     border-radius: 5px;
+
 }
 
 .constantValue {
@@ -78,7 +81,7 @@ body {
     font-family: Arial;
     color: #ffffff;
     font-size: 12px;
-    padding: 10px 20px 10px 20px;
+    padding: 7px 20px 7px 20px;
     text-decoration: none;
 }
 
@@ -104,17 +107,23 @@ body {
     border-radius: 10px;
     color: #ffffff;
     font-size: 12px;
-    padding: 10px 20px 10px 20px;
+    padding: 7px 20px 7px 20px;
     text-decoration: none;
 }
 
 .butn-dlt:hover {
-    background: #fd3c00; !important;
-    background-image: -webkit-linear-gradient(top, #fd3c00, #8f001e); !important;
-    background-image: -moz-linear-gradient(top, #fd3c00, #8f001e); !important;
-    background-image: -ms-linear-gradient(top, #fd3c00, #8f001e); !important;
-    background-image: -o-linear-gradient(top, #fd3c00, #8f001e); !important;
-    background-image: linear-gradient(to bottom, #fd3c00, #8f001e); !important;
+    background: #fd3c00;
+!important;
+    background-image: -webkit-linear-gradient(top, #fd3c00, #8f001e);
+!important;
+    background-image: -moz-linear-gradient(top, #fd3c00, #8f001e);
+!important;
+    background-image: -ms-linear-gradient(top, #fd3c00, #8f001e);
+!important;
+    background-image: -o-linear-gradient(top, #fd3c00, #8f001e);
+!important;
+    background-image: linear-gradient(to bottom, #fd3c00, #8f001e);
+!important;
     text-decoration: none;
 }
 
@@ -128,7 +137,20 @@ body {
     border-style: solid;
     border-radius: 0px;
 }
+
 .inpt:focus {
-    box-shadow: 0px 0px 5px rgba(66,66,66,.75);
-    outline:none;
+    box-shadow: 0px 0px 5px rgba(66, 66, 66, .75);
+    outline: none;
+}
+
+/*.chartButtons {*/
+/*    padding-top: 10px;*/
+/*}*/
+
+.chartButtons .butn {
+    margin-left: 30px;
+}
+
+#layoutBlock {
+    margin-left: 50px;
 }
