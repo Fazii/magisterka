@@ -7,15 +7,16 @@ function getConstantValue(address, constantId) {
 
     req.onload = function () {
         let array = new Uint8Array(req.response);
-        let hexString = toHexString(array);
-        console.log(hexString);
-        responseText.innerHTML = "DEC: "+parseInt(hexString, 16).toString() + " / HEX: " + hexString.toUpperCase();
+        let value = toWords(array).join('');
+        responseText.innerHTML = "DEC: " + value.toUpperCase();
     };
     req.send();
 }
 
-function toHexString(byteArray) {
-    return Array.prototype.map.call(byteArray, function (byte) {
-        return ('0' + (byte & 0xFF).toString(16)).slice(-2);
-    }).join('');
+function toWords (byteArray) {
+    let words = [];
+    for (let i = 0; i < byteArray.length; i += 4) {
+        words[i / 4] = (byteArray[i + 3] << 24) + (byteArray[i + 2] << 16) + (byteArray[i + 1] << 8) + byteArray[i];
+    }
+    return words;
 }

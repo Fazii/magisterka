@@ -13,6 +13,7 @@ function get() {
 
     if (address == null || address === "") {
         alert("Pole nie może być puste");
+        return;
     }
 
     req.open("GET", BASE_URL + "address/" + parseInt(address, 16).toString() + "?words=1", true);
@@ -20,8 +21,9 @@ function get() {
 
     req.onload = function () {
         let array = new Uint8Array(req.response);
-        let hexString = toHexString(array);
-        responseText.innerHTML = "DEC: " + parseInt(hexString, 16).toString() + " / HEX: " + hexString.toUpperCase();
+        let value = toWords(array).join('');
+        //toHexString(array);
+        responseText.innerHTML ="DEC: " + value.toUpperCase();
     };
     req.send();
 }
@@ -34,17 +36,18 @@ function getValueOnAddress(address, formula) {
         xhr.onload = function () {
             if (this.status >= 200 && this.status < 300) {
                 let array = new Uint8Array(xhr.response);
-                let responseVal = parseInt(toHexString(array), 16);
+                let responseVal = toWords(array).join('');
 
                 if (formula == null || formula === "") {
-                    resolve(responseVal);
-                } else {
-                    let scope = {
-                        x: responseVal
-                    };
-                    let eval = math.evaluate(formula.toString(), scope);
-                    resolve(eval);
+                    formula = "x";
                 }
+
+                let scope = {
+                    x: responseVal
+                };
+                let eval = math.evaluate(formula.toString(), scope);
+                resolve(Math.round(parseFloat(eval) *1000) / 1000); //Rounding to three decimal places
+
             } else {
                 reject({
                     status: this.status,
@@ -142,7 +145,6 @@ function createHtmlElement(elementId, address, refresh_rate, formula) {
         'border-color:#0B29FA;' +
         'border-radius:3px;';
 
-
     let deleteButton = '<input type="button" class="butn-dlt chartButton" value="Usuń" onclick="deleteGrid(' + elementId + ');" />';
     let saveButton = '<input type="button" class="butn chartButton" value="Aktualizuj" onclick="updateGrid(' + elementId + ');" />';
     let chartButtons = '<div class="chartButtons">' + deleteButton + saveButton + '</div>';
@@ -176,17 +178,15 @@ function updateGridElementsArray(json) {
     });
 }
 
-
-function toHexString(byteArray) {
-    return Array.prototype.map.call(byteArray, function (byte) {
-        return ('0' + (byte & 0xFF).toString(16)).slice(-2);
-    }).join('');
+function toWords (byteArray) {
+    let words = [];
+    for (let i = 0; i < byteArray.length; i += 4) {
+        words[i / 4] = (byteArray[i + 3] << 24) + (byteArray[i + 2] << 16) + (byteArray[i + 1] << 8) + byteArray[i];
+    }
+    return words;
 }
 
 function toByteArray(hexString) {
-    let result = [];
-    for (let i = 0; i < hexString.length; i += 2) {
-        result.push(parseInt(hexString.substr(i, 2), 16));
-    }
-    return result;
+    let value = parseInt(hexString);
+    return [(value & 0xFF), (value >> 8) & 0xFF, (value >> 16) & 0xFF, (value >> 24) & 0xFF];
 }

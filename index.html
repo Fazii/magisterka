@@ -30,7 +30,7 @@
 	</div>
 	<div id="response-box">
 		<h3>Odczyt: </h3>
-		<label for="AddressID1">Adres: </label>
+		<label for="AddressID1">Adres (hex): </label>
 		<input type="text" class="inpt" name="value" id="AddressID1">
 		<input type="button" class="butn" value="Odczyt" onclick="get();"/>
 		<b><p id="response"></p></b>
@@ -38,11 +38,8 @@
 </section>
 
 <button class="collapsible">Sekcja Wykresy</button>
-<section class="save-demo">
-
-	<h3 class="section-title"><span>Wykresy</span></h3>
-
-	<label for="ChartAddressID">Adres: </label>
+<section class="charts-section">
+	<label for="ChartAddressID">Adres (hex): </label>
 	<input type="text" class="inpt" name="value" id="ChartAddressID">
 	<label for="ChartRefreshID">Częstotliwość odświeżania (w ms): </label>
 	<input type="text" class="inpt" name="value" id="ChartRefreshID">
@@ -52,14 +49,12 @@
 	<input type="button" class="butn" value="Dodaj Wykres" onclick="addGrid();"/>
 
 
-    <input type="button" class="butn" id="layoutBlock" value="Odblokuj" onclick="blockGrid();"/>
+	<input type="button" class="butn" id="layoutBlock" value="Odblokuj" onclick="blockGrid();"/>
 	<div class="grid"></div>
 
 </section>
 <button class="collapsible">Sekcja Odczyty stałe</button>
 <section class="constants">
-	<h3 class="section-title"><span>Odczyty stałe</span></h3>
-
 	<div id="constant1" class="constant">
 		<p><b>0xA1000028</b> – system ID koncentratora 1</p>
 		<p id="constant1Value" class="constantValue"><b></b></p>

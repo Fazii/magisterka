@@ -73,8 +73,9 @@ function loadLayout(grid) {
  *  {
    "element_id: "1", // numer elementu na gridzie, potrzebny do sortowania
    "type": "spline_chart" // typ elementu.
-   "address": 0xAABBCCDD, //Potencjalnie tablica adresów
-   "refresh_rate": "1000 // czas pomiędzy kolejnymi odświeżeniami wykresu
+   "address": "0xAABBCCDD", //Potencjalnie tablica adresów
+   "refresh_rate": "1000" ,// czas pomiędzy kolejnymi odświeżeniami wykresu
+   "formula: "x + 1", // Formuła metematyczna zastosowana do przekształcania wykresów
    "name": "koncentrator 1",
    "length": num_of_bytes_to_read,
 
@@ -85,6 +86,12 @@ function addGrid() {
     let chartAddress = document.getElementById("ChartAddressID").value;
     let chartRefresh = document.getElementById("ChartRefreshID").value;
     let chartFormula = document.getElementById("ChartFormulaID").value;
+
+     if (chartAddress == null || chartAddress == "" || chartRefresh == null || chartRefresh == ""){
+         alert("Pole nie może być puste");
+         return;
+     }
+
 
     let div = createHtmlElement(elementId, chartAddress, chartRefresh, chartFormula);
 

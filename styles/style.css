@@ -16,7 +16,7 @@ body {
 }
 
 .item {
-    margin-bottom: 50px;
+    margin-bottom: 100px;
     max-width: 585px;
 }
 
@@ -49,6 +49,10 @@ body {
     overflow: hidden;
     background-color: #f1f1f1;
 
+}
+
+.charts-section {
+    background-color: #fcfcfc;
 }
 
 .constant {
@@ -157,12 +161,16 @@ body {
 }
 
 .chartInputs {
-    margin-left: 30px;
-    margin-right: 30px;
+
     margin-top: 5px;
     color: #000003;
     font-size: 18px;
 }
+
+.chartInputs .inpt {
+    margin: 5px;
+}
+
 #layoutBlock {
     margin-left: 50px;
 }
