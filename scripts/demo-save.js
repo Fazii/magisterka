@@ -63,7 +63,8 @@ function loadLayout(grid) {
     layout.forEach(async function (item, index) {
         let address = document.getElementById("ChartAddressID" + item).value;
         let refreshRate = document.getElementById("ChartRefreshID" + item).value;
-        await draw(item, address, refreshRate);
+        let formula = document.getElementById("ChartFormulaID" + item).value;
+        await draw(item, address, refreshRate, formula);
     });
 }
 
@@ -83,14 +84,16 @@ function addGrid() {
     let elementId = getCurrentHighestGridElementId() + 1;
     let chartAddress = document.getElementById("ChartAddressID").value;
     let chartRefresh = document.getElementById("ChartRefreshID").value;
+    let chartFormula = document.getElementById("ChartFormulaID").value;
 
-    let div = createHtmlElement(elementId.toString(), chartAddress.toString(), chartRefresh.toString())
+    let div = createHtmlElement(elementId, chartAddress, chartRefresh, chartFormula);
 
     let newGridElement = {
         "element_id": elementId,
         "type": "spline",
         "address": chartAddress,
         "refresh_rate": chartRefresh,
+        "formula": chartFormula,
         "name:": chartAddress,
         "length": "1"
     };
@@ -134,20 +137,21 @@ function deleteGrid(elementId) {
     initGrid();
 }
 
-// TODO: Implement updating current grid element
 function updateGrid(elementId) {
     let chartAddress = document.getElementById("ChartAddressID" + elementId).value;
     let chartRefresh = document.getElementById("ChartRefreshID" + elementId).value;
+    let chartFormula = document.getElementById("ChartFormulaID" + elementId).value;
     for (let i = 0; i < gridElements.layout.length; i++) {
         if (elementId.valueOf() === gridElements.layout[i].element_id) {
-            gridElements.layout[i].address = chartAddress.toString();
-            gridElements.layout[i].refresh_rate = chartRefresh.toString();
+            gridElements.layout[i].address = chartAddress;
+            gridElements.layout[i].refresh_rate = chartRefresh;
+            gridElements.layout[i].formula = chartFormula;
         }
     }
 
     sendUpdateLayoutRequest(JSON.stringify(gridElements));
 
-    updateChart(elementId, chartRefresh, chartAddress);
+    updateChart(elementId, chartRefresh, chartAddress, chartFormula);
 }
 
 function getCurrentHighestGridElementId() {

@@ -2,7 +2,7 @@ let charts = []; // Array containing all existing charts
 let chart;
 let interval;
 
-async function draw(containerId, address, refreshRate) {
+async function draw(containerId, address, refreshRate, formula) {
     //Don't draw chart again if chart already exist
     for (let i = 0; i < charts.length; i++) {
         if (charts[i][0] === containerId.toString()) {
@@ -24,7 +24,7 @@ async function draw(containerId, address, refreshRate) {
                     let series = this.series[0];
                     interval = setInterval(async function () {
                         let x = (new Date()).getTime(), // current time
-                            y = await getValueOnAddress(address);
+                            y = await getValueOnAddress(address, formula);
                         series.addPoint([x, y], true, true);
                     }, refreshRate);
                 }
@@ -110,7 +110,7 @@ function deleteChart(containerId) {
     });
 }
 
-function updateChart(containerId, refreshRate, address) {
+function updateChart(containerId, refreshRate, address, formula) {
     charts.forEach(function (item, index) {
         if (item[0] === containerId.toString()) {
             let interval = item[2];
@@ -118,13 +118,13 @@ function updateChart(containerId, refreshRate, address) {
             let series = item[1].series[0];
             item[2] = setInterval(async function () {
                 let x = (new Date()).getTime(),
-                    y = await getValueOnAddress(address);
+                    y = await getValueOnAddress(address, formula);
                 series.addPoint([x, y], true, true);
             }, refreshRate);
 
             item[1].update({
                 title: {
-                    text: 'Live data (' + address + ')'
+                    text: 'Odczyt: (' + address + ')'
                 },
                 series: [{
                     name: address

@@ -15,6 +15,11 @@ body {
     margin: 0 auto;
 }
 
+.item {
+    margin-bottom: 50px;
+    max-width: 585px;
+}
+
 .collapsible {
     background-color: #eee;
     color: #444;
@@ -35,7 +40,7 @@ body {
 
 .grid {
     min-height: 570px;
-    padding-bottom: 30px;
+    padding-bottom: 40px;
 }
 
 .read-write {
@@ -143,14 +148,21 @@ body {
     outline: none;
 }
 
-/*.chartButtons {*/
-/*    padding-top: 10px;*/
-/*}*/
-
 .chartButtons .butn {
     margin-left: 30px;
 }
 
+.chartButtons{
+    margin-top: -20px;
+}
+
+.chartInputs {
+    margin-left: 30px;
+    margin-right: 30px;
+    margin-top: 5px;
+    color: #000003;
+    font-size: 18px;
+}
 #layoutBlock {
     margin-left: 50px;
 }

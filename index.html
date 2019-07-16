@@ -6,6 +6,7 @@
 	<script src="code/modules/exporting.js"></script>
 	<script src="code/modules/export-data.js"></script>
 	<script src='scripts/constants-script.js?v=5'></script>
+	<script src='scripts/math.js?v=5'></script>
 	<link rel="stylesheet" href="styles/demo-save.css">
 	<link rel="stylesheet" href="styles/style.css">
 	<title>J-PET Jagiellonian-PET TOMOGRAPHY</title>
@@ -21,16 +22,16 @@
 <section class="read-write">
 	<div id="input-box">
 		<h3>Zapis:</h3>
-		<label for="AdressID">Adres (hex): </label>
-		<input type="text" class="inpt" name="value" id="AdressID">
+		<label for="AddressID">Adres (hex): </label>
+		<input type="text" class="inpt" name="value" id="AddressID">
 		<label for="ValueID">Wartość (hex): </label>
 		<input type="text" class="inpt" name="value" id="ValueID">
 		<input type="button" class="butn" value="Zapisz" onclick="patch();"/>
 	</div>
 	<div id="response-box">
 		<h3>Odczyt: </h3>
-		<label for="valueID1">Adres: </label>
-		<input type="text" class="inpt" name="value" id="valueID1">
+		<label for="AddressID1">Adres: </label>
+		<input type="text" class="inpt" name="value" id="AddressID1">
 		<input type="button" class="butn" value="Odczyt" onclick="get();"/>
 		<b><p id="response"></p></b>
 	</div>
@@ -45,7 +46,12 @@
 	<input type="text" class="inpt" name="value" id="ChartAddressID">
 	<label for="ChartRefreshID">Częstotliwość odświeżania (w ms): </label>
 	<input type="text" class="inpt" name="value" id="ChartRefreshID">
+	<label for="ChartFormulaID">Formuła matematyczna (<i><b>f(x)</b></i>)</label>
+	<input type="text" class="inpt" name="value" id="ChartFormulaID">
+
 	<input type="button" class="butn" value="Dodaj Wykres" onclick="addGrid();"/>
+
+
     <input type="button" class="butn" id="layoutBlock" value="Odblokuj" onclick="blockGrid();"/>
 	<div class="grid"></div>
 
